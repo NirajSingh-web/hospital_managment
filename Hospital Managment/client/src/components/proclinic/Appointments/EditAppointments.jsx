@@ -15,9 +15,11 @@ const EditAppointment = () => {
   // const [formSubmissions, setFormSubmissions] = useState({});
   const [loader, setloader] = useState(false);
   const [Alert, setalert] = useState("");
+  // get particular data for edit from redux store 
   const appointmentdata = useSelector((state) => {
     return state.appointmentdata;
   });
+//  provide alert value 
   useEffect(() => {
     setTimeout(
       () => {
@@ -26,6 +28,7 @@ const EditAppointment = () => {
       Alert && Alert["AlertData"].length > 40 ? 6000 : 3000
     );
   }, [Alert && Alert["AlertData"]]);
+  // provide value to input element for edit
   useEffect(() => {
     if (Object.keys(appointmentdata).length != 0) {
       setid(appointmentdata["_id"]);
@@ -38,6 +41,7 @@ const EditAppointment = () => {
       setdoctorId(appointmentdata["Doctorid"]);
     }
   }, [appointmentdata]);
+  // after edit the data then update the data through this method 
   const HandleOnUpdate = async (e) => {
     e.preventDefault();
     const url = "http://localhost:4000/Appointment";
@@ -90,6 +94,7 @@ const EditAppointment = () => {
   };
   return (
     <>
+    {/* alert component  */}
       {Alert["AlertData"] && (
         <div className="relative max-sm:top-0 top-[-20px] z-20 ">
           <div className="">
@@ -109,6 +114,7 @@ const EditAppointment = () => {
           </div>
         </div>
       )}
+      
       <div className="xl:m-5 sm:m-0 ">
         <div className="bg-[hsl(0,0%,100%)] p-3 relative">
           <div>

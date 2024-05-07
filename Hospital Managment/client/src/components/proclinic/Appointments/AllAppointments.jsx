@@ -15,11 +15,14 @@ const AllAppointments = () => {
   const [loader, setloader] = useState(false);
   const dispatch = useDispatch();
   const Navigate = useNavigate();
+  // providing alert value
   useEffect(() => {
     setTimeout(() => {
       setalert("");
     }, 3000);
   }, [Alert && Alert["AlertData"]]);
+  // get all appointment  data through api
+  // if patient and doctor logged in then get particular data but admin logged in then get all data
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     fetch("http://localhost:4000/appointment", {
@@ -33,6 +36,7 @@ const AllAppointments = () => {
       .then((res) => res.json())
       .then((data) => setappointmentlist(data));
   });
+  // appointment search method
   const handleonsearch = (e) => {
     const searchText = e.target.value;
     if (searchText != "") {
@@ -63,6 +67,7 @@ const AllAppointments = () => {
       setfiltereddata("");
     }
   };
+  // on check box select get particular data
   const HandleonSelect = (e, i) => {
     setid(e._id);
     if (e) {
@@ -71,6 +76,7 @@ const AllAppointments = () => {
       setalert({ AlertType: "warning", AlertData: "Please select a row" });
     }
   };
+  // edit method to get particular data and navigate to edit component
   const HandleonEdit = () => {
     if (appointmentdata != "") {
       dispatch(addAppointment(appointmentdata));
@@ -79,6 +85,7 @@ const AllAppointments = () => {
       setalert({ AlertType: "warning", AlertData: "Please select a row" });
     }
   };
+  // delete method
   const Handleondelete = async () => {
     if (appointmentdata) {
       setloader(true);
@@ -104,6 +111,7 @@ const AllAppointments = () => {
       setalert({ AlertType: "warning", AlertData: "Please select a row" });
     }
   };
+  // data download in csv format
   const downloadCSV = () => {
     const data = appointmentlist;
     const csvContent = convertToCSV(data);
@@ -123,6 +131,7 @@ const AllAppointments = () => {
     const csvArray = [headers.join(","), ...rows.map((row) => row.join(","))];
     return csvArray.join("\n");
   };
+  // data download in pdf format
   const downloadPDF = () => {
     const input = document.getElementById("pdf-content");
     html2canvas(input).then((canvas) => {
@@ -131,6 +140,7 @@ const AllAppointments = () => {
       pdf.save("download.pdf");
     });
   };
+  //data download in  excel format
   const downloadExcel = () => {
     const headings = Object.keys(appointmentlist[0]);
     const dataArray = [

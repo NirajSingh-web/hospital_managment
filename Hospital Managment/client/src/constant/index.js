@@ -407,8 +407,8 @@ const contactdetailposter = [
     ph_no: "+91 6201269225",
     email_icon: "fa fa-envelope",
     email: "nirajsingh4141@gmail.com",
-    rights: "Copy rights © 2023",
-    creator: " Niraj Singh | MERN",
+    rights: "Copy rights © 2024",
+    creator: " Niraj Singh | Full Stack ",
     title: "Creator :-",
   },
 ];

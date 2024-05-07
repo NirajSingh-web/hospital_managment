@@ -76,8 +76,8 @@ const AllPayment = () => {
                   <th>
                     <input type="checkbox" />
                   </th>
-                  <th>Patient Name</th>
-                  <th>Doctor Name</th>
+                  <th>Patient Id</th>
+                  <th>Doctor Id</th>
                   <th>Service Name</th>
                   <th>Charges</th>
                   <th>Discount</th>
@@ -85,43 +85,38 @@ const AllPayment = () => {
                 </tr>
               </thead>
               <tbody>
-                {(filtereddata ? filtereddata : paymentlist).map(
-                  (
-                    {
-                      service,
-                      cost,
-                      payment,
-                      patient_Name,
-                      Doctor_Name,
-                      status,
-                    },
-                    index
-                  ) =>
-                    index < 10 ? (
-                      <tr key={index}>
-                        <td>
-                          <input type="checkbox" className="form-check-input" />
-                        </td>
-                        <td>{patient_Name}</td>
-                        <td>{Doctor_Name}</td>
-                        <td>{null}</td>
-                        <td>{null}</td>
-                        <td>{payment["discount"]}</td>
-                        <td>
-                          <span
-                            className={`text-white h6 text-[10px] p-1 rounded-sm ${
-                              status === "Cancel"
-                                ? "bg-[rgb(239,110,110)]"
-                                : status === "completed"
-                                ? "bg-[rgb(60,179,113)]"
-                                : "bg-[rgb(255,170,42)]"
-                            }`}
-                          >
-                            {status}
-                          </span>
-                        </td>
-                      </tr>
-                    ) : null
+                {(filtereddata ? filtereddata : paymentlist).map((e, index) =>
+                  index < 10 ? (
+                    <tr key={index}>
+                      <td>
+                        <input type="checkbox" className="form-check-input" />
+                      </td>
+                      <td>{e.PatientID}</td>
+                      <td>{e.Doctorid}</td>
+                      <td>{e.Services[0]["Servicename"]}</td>
+                      <td>
+                        $
+                        {(Number(e.Services[0]["Cost"]) -
+                          e.payment["discount"] +
+                          e.payment["advancePaid"]) /
+                          80}
+                      </td>
+                      <td>${e.payment["discount"] / 80}</td>
+                      <td>
+                        <span
+                          className={`text-white h6 text-[10px] p-1 rounded-sm ${
+                            e.status === "Cancelled"
+                              ? "bg-[rgb(239,110,110)]"
+                              : e.status === "Completed"
+                              ? "bg-[rgb(60,179,113)]"
+                              : "bg-[rgb(255,170,42)]"
+                          }`}
+                        >
+                          {e.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ) : null
                 )}
               </tbody>
             </table>

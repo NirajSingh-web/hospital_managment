@@ -36,7 +36,7 @@ router.post("/", upload.single("file"), async (req, res) => {
       Username: req.body["Username"],
       Email: req.body["Email"],
       phone: req.body["phone"],
-      Doctordegree: req.file,
+      file: req.file,
       password: passwordbcrypt,
     });
     const Users_data = await usercollection.find();
@@ -81,6 +81,7 @@ router.post("/", upload.single("file"), async (req, res) => {
     }
   } catch (e) {
     res.status(404).json("Internal server issue");
+    console.log(e.message);
   }
 });
 router.put("/", async (req, res) => {

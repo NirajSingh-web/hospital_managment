@@ -13,11 +13,13 @@ const AddAppointments = () => {
   const [Departmentlist, Setdepartmentlist] = useState("");
   const [loader, setloader] = useState(false);
   const [Alert, setalert] = useState("");
+  // this method is providing value null for Alert 
   useEffect(() => {
     setTimeout(() => {
       setalert("");
     }, 3000);
   }, [Alert]);
+  // get all departmentlist  through api 
   useEffect(() => {
     fetch("http://localhost:4000/hospital/departmentlist")
       .then((res) => res.json())
@@ -55,6 +57,7 @@ const AddAppointments = () => {
       return formatdoctorName;
     }
   }
+  // using post method on form submit 
   const HandleOnsubmit = async (e) => {
     e.preventDefault();
     const url = "http://localhost:4000/Appointment";
@@ -95,6 +98,7 @@ const AddAppointments = () => {
     } else {
       setalert({ AlertType: "warning", AlertData: "Please Confirm" });
     }
+    // this is basically using for count  formSubmissions day by day 
     const monthNames = [
       "January",
       "February",
@@ -120,6 +124,7 @@ const AddAppointments = () => {
   };
   return (
     <>
+    {/* alert section  */}
       {Alert["AlertData"] && (
         <div className="relative max-sm:top-0 top-[-20px] z-20 ">
           <div className="">
@@ -139,6 +144,7 @@ const AddAppointments = () => {
           </div>
         </div>
       )}
+      {/* appointment form section  */}
       <div className="xl:m-5 sm:m-0">
         <div className="bg-[hsl(0,0%,100%)] p-3 relative">
           <div>
@@ -326,6 +332,7 @@ const AddAppointments = () => {
           </div>
         </div>
       </div>
+      {/* loader section  */}
       {loader && (
         <div className={`absolute w-full top-0 z-50 right-0`}>
           <Loader />

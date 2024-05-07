@@ -13,6 +13,8 @@ const AppointmentDetail = () => {
   const [Alert, setalert] = useState("");
   const dispatch = useDispatch();
   const Navigate = useNavigate();
+   // get all appointment  data through api
+  // if patient and doctor logged in then get particular data but admin logged in then get all data
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     fetch("http://localhost:4000/appointment", {
@@ -30,12 +32,14 @@ const AppointmentDetail = () => {
       setapihit(false);
     }, 1000);
   }, [apihit]);
+   // edit method to get particular data from parameter and navigate to edit component
   const HandleonEdit = (e) => {
     if (e != "") {
       dispatch(addAppointment(e));
       Navigate("/Appointment/EditAppointment");
     }
   };
+  // delete mehtod used for delete data from databse 
   const Handleondelete = async (e) => {
     if (e) {
       setloader(true);
@@ -58,7 +62,7 @@ const AppointmentDetail = () => {
       }
     }
   };
-
+// data download in csv format
   const downloadCSV = (e) => {
     const headers = Object.keys(appointmentlist[0]);
     const csvContent = [
@@ -73,6 +77,7 @@ const AppointmentDetail = () => {
     link.click();
     document.body.removeChild(link);
   };
+  // data download in pdf format
   const downloadPDF = () => {
     const input = document.getElementById("pdf-content");
     html2canvas(input).then((canvas) => {
@@ -81,6 +86,7 @@ const AppointmentDetail = () => {
       pdf.save("appointment.pdf");
     });
   };
+   //data download in  excel format
   const downloadExcel = (e) => {
     const headings = Object.keys(appointmentlist[0]);
     const dataArray = [headings, headings.map((key) => e[key])];
@@ -94,6 +100,7 @@ const AppointmentDetail = () => {
   };
   return (
     <>
+    {/* alert section  */}
       {Alert["AlertData"] && (
         <div className="relative max-sm:top-0 top-[-20px] z-20 ">
           <div className="">
@@ -120,6 +127,7 @@ const AppointmentDetail = () => {
             : "xl:m-4 max-sm:m-2"
         }`}
       >
+        {/* appointment data section  */}
         {appointmentlist.length != 0 ? (
           <div className="bg-[hsl(0,0%,100%)] p-3">
             <h1 className="text-[rgb(229,116,152)] h4 ">Appointment Details</h1>

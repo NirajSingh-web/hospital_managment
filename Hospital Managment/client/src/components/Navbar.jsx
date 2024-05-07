@@ -14,6 +14,7 @@ const Navbar = (probs) => {
   const Navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
+  // it is using for get screen resolution
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width:800px)");
     setIsMobile(mediaQuery.matches);
@@ -25,7 +26,7 @@ const Navbar = (probs) => {
       mediaQuery.removeEventListener("change", handleonchange);
     };
   }, []);
-
+  // through location provide pagetitle and subtittle it is only using for the when any user reload the website then it will provide value
   useEffect(() => {
     navlinks.map(({ collapseitem, title, url }) => {
       if (url != null) {
@@ -59,8 +60,8 @@ const Navbar = (probs) => {
         });
       }
     });
-  }, [location]);
-
+  }, [location.pathname]);
+  // this method is using for validate the user
   {
     const userdata = JSON.parse(localStorage.getItem("user"));
     useEffect(() => {
@@ -72,7 +73,7 @@ const Navbar = (probs) => {
     }, [userdata ? userdata["token"] : true]);
   }
   return (
-    <div className={`${probs.islogin}`}>
+    <div>
       <motion.section
         variants={staggerContainer()}
         initial="hidden"
@@ -116,6 +117,7 @@ const Navbar = (probs) => {
                   <ul className="list-none font-semibold ">
                     {navlinks.map(
                       ({ id, icon, title, collapseitem, toggle, url }) =>
+                        // if user logged then hide the login and signup button in navbar
                         auth["token"] ? (
                           title === "Login" || title === "Sign Up" ? null : (
                             <div
@@ -222,6 +224,7 @@ const Navbar = (probs) => {
                                           : "h-0 overflow-hidden w-0"
                                       }  translate-x-5
                                       ${
+                                        // if patient logged then hide this feature  
                                         (e.item === "Add Doctor" ||
                                           e.item === "Edit Doctor") &&
                                         auth["usertype"] === "Patient"
@@ -232,6 +235,7 @@ const Navbar = (probs) => {
                                       key={e.id}
                                     >
                                       <Link to={`/${e.url}`}>
+                                        {/* through onclick provide subtitle and pagetitlle value  */}
                                         <span
                                           className="cursor-pointer text-[16px] "
                                           onClick={() => {
@@ -275,6 +279,7 @@ const Navbar = (probs) => {
                             </div>
                           )
                         ) : title === "Login" || title === "Sign Up" ? (
+                          // if user didn't login then show  the login and signup button in navbar and hide other button
                           <div
                             className={`${
                               probs.fontsize ===
@@ -326,6 +331,8 @@ const Navbar = (probs) => {
                     )}
                   </ul>
                 </div>
+                {/* this is developer details  */}
+                {/* contactdetailposter value is coming from the constant folder  */}
                 {contactdetailposter.map((e) => (
                   <div
                     className={`bg-[#ff589b] text-white pt-2 pb-2 mt-2 ms-1 me-1 ps-3 border-[3px] border-[#bb6788] rounded-lg  ${

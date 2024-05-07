@@ -36,15 +36,11 @@ const Allpatient = () => {
         .then((data) => {
           setpatientlist(data);
         });
-    }
-  }, [check]);
-  useEffect(() => {
-    if (check) {
       setTimeout(() => {
         setcheck(false);
       }, 1000);
     }
-  });
+  }, [check]);
   const handleonsearch = (e) => {
     const searchText = e.target.value;
     if (searchText != "") {

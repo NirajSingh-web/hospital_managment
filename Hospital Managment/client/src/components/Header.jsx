@@ -19,19 +19,23 @@ const Header = (probs) => {
   const Navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const [Alert, setalert] = useState({ AlertType: null, AlertData: null });
+  const [Alert, setalert] = useState("");
+  // geting page title and pagesubtitle from redux store
   const data = useSelector((state) => state.headerdata);
+  // this method is used for assign null value for alert
   useEffect(() => {
     setTimeout(() => {
-      setalert({ AlertType: null, AlertData: null });
+      setalert("");
     }, 3000);
-  }, [Alert["AlertType"]]);
+  }, [Alert && Alert["AlertType"]]);
+  // this method  is providing pagtitle and subtitle
   useEffect(() => {
     if (data.pagetitle) {
       setpagetitle(data.pagetitle);
       setpagesubtitle(data.pagesubTitle);
     }
   }, [data]);
+  // it is using for get screen resolution
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width:800px)");
     setIsMobile(mediaQuery.matches);
@@ -43,6 +47,7 @@ const Header = (probs) => {
       mediaQuery.removeEventListener("change", handleonchange);
     };
   }, []);
+  // through location provide page title and page subtitile
   useEffect(() => {
     if (location.pathname === "/VerifyDoctor") {
       dispatch(
@@ -74,15 +79,18 @@ const Header = (probs) => {
       );
     }
   }, [location]);
+  // here is creating auth
   const userdata = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
-    if (userdata != null) {
-      if (userdata["token"]) {
-        setauth(userdata);
-      }
+    if (userdata === null) {
+      setauth(false);
+    } else if (userdata["token"]) {
+      setauth(userdata);
     }
-  }, [userdata && userdata["token"]]);
+  }, [userdata ? userdata["token"] : true]);
+  // logout function
   const HandleOnLogout = () => {
+    setuserbox(false);
     setalert({ AlertType: "success", AlertData: " Succesfully Logged out" });
     localStorage.removeItem("user");
     Navigate("/Login");
@@ -118,6 +126,7 @@ const Header = (probs) => {
                       </span>
                       <span
                         className={`h-10 w-10 bg-[#c1bbbb] flex items-center justify-center rounded-[50%] cursor-pointer`}
+                        // this method is used for requestFullscreen and exit fullscreen
                         onClick={() => {
                           if (document.documentElement.requestFullscreen()) {
                             document.exitFullscreen();
@@ -128,122 +137,127 @@ const Header = (probs) => {
                       >
                         <i className={`${e.zoom_icon} text-[20px]`}></i>
                       </span>
-                      {auth && auth["token"] && (
-                        <div className="relative">
-                          <span
-                            className={`h-10 w-10 bg-[#c1bbbb] flex items-center justify-center rounded-[50%] cursor-pointer `}
-                            onClick={() => {
-                              usernotification
-                                ? setusernotification(false)
-                                : setusernotification(true);
-                            }}
-                          >
-                            <i
-                              className={`${e.Notification_icon} text-[20px]`}
-                            ></i>
-                          </span>
+                      {/* if patient user  logged in then hide the notification button.because here is no feature for patient it is only for admin and doctor. through notification bar to navingate verify page  */}
+                      {auth &&
+                        auth["token"] &&
+                        auth["usertype"] != "Patient" && (
+                          <div className="relative">
+                            <span
+                              className={`h-10 w-10 bg-[#c1bbbb] flex items-center justify-center rounded-[50%] cursor-pointer `}
+                              onClick={() => {
+                                usernotification
+                                  ? setusernotification(false)
+                                  : setusernotification(true);
+                              }}
+                            >
+                              <i
+                                className={`${e.Notification_icon} text-[20px]`}
+                              ></i>
+                            </span>
 
-                          <div
-                            className={`absolute right-[3px] max-sm:right-[-112px]   transition-all rotate-360 mt-[-8px] ${
-                              usernotification
-                                ? "w-[270px]"
-                                : "w-0 overflow-hidden"
-                            } `}
-                          >
-                            <div className="flex justify-end max-sm:justify-center xl:me-[8px]">
-                              <div className=" h-5 w-5 bg-[hsl(75,2%,34%)] rotate-45 transform origin-bottom-left "></div>
-                            </div>
-                            <div className="bg-white relative rounded-lg">
-                              <div className="bg-[hsl(75,2%,34%)] text-white p-3">
-                                <h1 className="card_header text-lg font-semibold">
-                                  Notifications
-                                </h1>
+                            <div
+                              className={`absolute right-[3px] max-sm:right-[-112px]   transition-all rotate-360 mt-[-8px] ${
+                                usernotification
+                                  ? "w-[270px]"
+                                  : "w-0 overflow-hidden"
+                              } `}
+                            >
+                              <div className="flex justify-end max-sm:justify-center xl:me-[8px]">
+                                <div className=" h-5 w-5 bg-[hsl(75,2%,34%)] rotate-45 transform origin-bottom-left "></div>
                               </div>
+                              <div className="bg-white relative rounded-lg">
+                                <div className="bg-[hsl(75,2%,34%)] text-white p-3">
+                                  <h1 className="card_header text-lg font-semibold">
+                                    Notifications
+                                  </h1>
+                                </div>
 
-                              <div className=" border-[hsl(0,6%,87%)] border-[2px]">
-                                {auth["usertype"] === "Admin" && (
-                                  <div>
-                                    <div className="p-3 ">
-                                      <i className="fa fa-wheelchair me-2 text-[hsl(214,79%,58%)]"></i>
-                                      <span
-                                        className="cursor-pointer"
-                                        onClick={() => {
-                                          Navigate("/Verifypatient");
-                                          setusernotification(false);
-                                          dispatch(
-                                            headerdata({
-                                              pagetitle: "Patient",
-                                              pagesubTitle: "Pending Data",
-                                            })
-                                          );
-                                        }}
-                                      >
-                                        New Patient Added
-                                      </span>
+                                <div className=" border-[hsl(0,6%,87%)] border-[2px]">
+                                  {/* if admin logged then visible this feature  */}
+                                  {auth["usertype"] === "Admin" && (
+                                    <div>
+                                      <div className="p-3 ">
+                                        <i className="fa fa-wheelchair me-2 text-[hsl(214,79%,58%)]"></i>
+                                        <span
+                                          className="cursor-pointer"
+                                          onClick={() => {
+                                            Navigate("/Verifypatient");
+                                            setusernotification(false);
+                                            dispatch(
+                                              headerdata({
+                                                pagetitle: "Patient",
+                                                pagesubTitle: "Pending Data",
+                                              })
+                                            );
+                                          }}
+                                        >
+                                          New Patient Added
+                                        </span>
+                                      </div>
+                                      <div className="p-3">
+                                        <i className="fa fa-dollar me-[15px]  text-[hsl(326,76%,55%)]"></i>
+                                        <span
+                                          onClick={() => {
+                                            Navigate("/Verifypayment");
+                                            setusernotification(false);
+                                            dispatch(
+                                              headerdata({
+                                                pagetitle: "Payment",
+                                                pagesubTitle: "Pending Data",
+                                              })
+                                            );
+                                          }}
+                                          className="cursor-pointer"
+                                        >
+                                          Patient Payment Done
+                                        </span>
+                                      </div>
+                                      <div className="p-3">
+                                        <i className="fa fa-edit me-2  text-[#3f89e9]"></i>
+                                        <span
+                                          className="cursor-pointer"
+                                          onClick={() => {
+                                            setusernotification(false);
+                                            Navigate("/VerifyDoctor");
+                                            dispatch(
+                                              headerdata({
+                                                pagetitle: "Doctor",
+                                                pagesubTitle: "Pending Data",
+                                              })
+                                            );
+                                          }}
+                                        >
+                                          New Doctor Account Added
+                                        </span>
+                                      </div>
                                     </div>
-                                    <div className="p-3">
-                                      <i className="fa fa-dollar me-[15px]  text-[hsl(326,76%,55%)]"></i>
-                                      <span
-                                        onClick={() => {
-                                          Navigate("/Verifypayment");
-                                          setusernotification(false);
-                                          dispatch(
-                                            headerdata({
-                                              pagetitle: "Payment",
-                                              pagesubTitle: "Pending Data",
-                                            })
-                                          );
-                                        }}
-                                        className="cursor-pointer"
-                                      >
-                                        Patient Payment Done
-                                      </span>
-                                    </div>
+                                  )}
+                                  {/* if admin and doctor logged then visible this feature  */}
+                                  {auth["usertype"] != "Patient" && (
                                     <div className="p-3">
                                       <i className="fa fa-edit me-2  text-[#3f89e9]"></i>
                                       <span
                                         className="cursor-pointer"
                                         onClick={() => {
+                                          Navigate("/Verifyappointment");
                                           setusernotification(false);
-                                          Navigate("/VerifyDoctor");
                                           dispatch(
                                             headerdata({
-                                              pagetitle: "Doctor",
+                                              pagetitle: "Appointment",
                                               pagesubTitle: "Pending Data",
                                             })
                                           );
                                         }}
                                       >
-                                        New Doctor Account Added
+                                        Patient Appointment Booked
                                       </span>
                                     </div>
-                                  </div>
-                                )}
-                                {auth["usertype"] != "Patient" && (
-                                  <div className="p-3">
-                                    <i className="fa fa-edit me-2  text-[#3f89e9]"></i>
-                                    <span
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        Navigate("/Verifyappointment");
-                                        setusernotification(false);
-                                        dispatch(
-                                          headerdata({
-                                            pagetitle: "Appointment",
-                                            pagesubTitle: "Pending Data",
-                                          })
-                                        );
-                                      }}
-                                    >
-                                      Patient Appointment Booked
-                                    </span>
-                                  </div>
-                                )}
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      )}
+                        )}
                       <div className="relative">
                         <span
                           className={`h-10 w-10 bg-[#c1bbbb] flex items-center justify-center rounded-[50%] `}
@@ -280,7 +294,7 @@ const Header = (probs) => {
                             <div className="bg-white relative rounded-lg">
                               <div className="bg-[hsl(75,2%,34%)] text-white p-3">
                                 <h1 className="card_header text-lg font-semibold">
-                                  {userdata.usertype}
+                                  {auth && auth.usertype}
                                 </h1>
                               </div>
                               <div className=" border-[hsl(0,6%,87%)] border-[2px]">
@@ -288,6 +302,7 @@ const Header = (probs) => {
                                   className="p-3 "
                                   onClick={() => {
                                     Navigate("/user/account/detail");
+                                    setuserbox(false);
                                     dispatch(
                                       headerdata({
                                         pagetitle: "User",
@@ -322,6 +337,7 @@ const Header = (probs) => {
                     </li>
                   ))}
                 </ul>
+                {/* this is page title and pagesubtitle section  */}
                 {headernav.map((e) => (
                   <div
                     className="bg-[#666666] flex justify-between items-center ps-4 pe-4 pt-2 pb-2 text-white"

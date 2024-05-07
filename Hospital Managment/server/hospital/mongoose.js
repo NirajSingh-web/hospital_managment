@@ -10,7 +10,7 @@ async function MGConnection() {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-  } catch (e) {
+  } catch (e){
     console.log("database connection cut", e.message);
   }
 }
@@ -109,7 +109,6 @@ async function Doctor() {
     (await MGConnection()).model("doctors", Doctor_Schema);
   return Doctor_Collection;
 }
-
 // creating mongo schema for payment and connecting to model
 async function payment() {
   const payment_Schema = new mongoose.Schema(
@@ -202,7 +201,7 @@ async function DoctorRegister() {
       password: { type: String, required: true },
       Email: { type: String, required: true },
       phone: { type: Number, required: true },
-      Doctordegree: { type: String, required: true },
+      file: { type: Object, required: true },
       status: {
         type: String,
         required: true,

@@ -48,13 +48,13 @@ const Dashboard = () => {
     <>
       <div
         className={`sm:m-0 max-sm:p-2 ${
-          (doctor && doctor.length === 0) ||
+          (doctor && doctor.length === 0)||Totalpatient.length!=0||
           (Totalappointment && Totalappointment.length === 0)
             ? "bg-[hsl(208,35%,13%)] h-[81.8vh]"
             : "xl:m-5"
         }`}
       >
-        {(doctor && doctor.length != 0) ||
+        {(doctor && doctor.length != 0) ||Totalpatient.length!=0||
         (Totalappointment && Totalappointment.length != 0) ? (
           <>
             <div className="flex xl:justify-between flex-wrap justify-center ">

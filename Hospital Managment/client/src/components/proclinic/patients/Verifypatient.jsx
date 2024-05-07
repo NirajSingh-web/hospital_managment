@@ -353,7 +353,7 @@ const Verifypatient = () => {
             </>
           ) : (
             <div className="flex justify-center h-[80vh] items-center">
-              <div className="card w-[50%] p-3 text-center bg-[hsl(210,56%,25%)] text-white">
+              <div className="card  p-3 text-center bg-[hsl(210,56%,25%)] text-white">
                 <p>No Data Available</p>
               </div>
             </div>

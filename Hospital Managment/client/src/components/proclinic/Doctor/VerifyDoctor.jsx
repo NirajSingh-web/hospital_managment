@@ -114,7 +114,7 @@ const VerifyDoctor = () => {
     setusername(e.Username);
     setemail(e.Email);
     setphone(e.phone);
-    setfile(e.Doctordegree);
+    setfile(e.file);
   };
   const Handleonapproval = async (e) => {
     const updatedata = {

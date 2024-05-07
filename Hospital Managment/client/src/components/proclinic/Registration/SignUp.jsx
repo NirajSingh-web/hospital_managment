@@ -139,19 +139,17 @@ const SignUp = () => {
     }
   };
   const doctorsignup = async () => {
-    const Doctoruser = {
-      Username,
-      password,
-      Email,
-      Doctordegree,
-      phone: Number(phone),
-    };
+    const formdata = new FormData();
+    formdata.append("Username", Username);
+    formdata.append("password", password);
+    formdata.append("Email", Email);
+    formdata.append("file", Doctordegree);
+    formdata.append("phone", Number(phone));
     setloader(true);
     const url = "http://localhost:4000/user/signup/doctor";
     const result = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(Doctoruser),
+      body: formdata,
     });
     const res_data = await result.json();
     if (res_data) {
@@ -316,10 +314,9 @@ const SignUp = () => {
                           required
                           type="file"
                           className="form-control bg-[rgb(240,240,240)] leading-8"
-                          value={Doctordegree}
                           name="upload  your degree"
                           onChange={(e) => {
-                            setdoctordegree(e.target.value);
+                            setdoctordegree(e.target.files[0]);
                           }}
                         ></input>
                       </div>
