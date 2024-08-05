@@ -13,7 +13,7 @@ function generateRandomString(length) {
   }
   return result;
 }
-// generate AppointmentId
+// generate AppointmentId 
 function generateAppointmentId() {
   const randomString = generateRandomString(6);
   return `AP${randomString}`.toUpperCase();
@@ -103,7 +103,7 @@ router.post("/", fetchuser, async (req, res) => {
     res.status(404).json("server not found 404");
   }
 });
-// update appointment  by Id
+// update appointment  by Id jj jjj
 router.put("/", async (req, res) => {
   try {
     const usercollection = await Appointment();
